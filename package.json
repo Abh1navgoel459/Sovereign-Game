@@ -1,0 +1,19 @@
+{
+  "name": "sovereign-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sovereign landing page with alpha signup email flow",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:landing": "node server.js",
+    "start:game": "npm --prefix ZDBGame run dev -- -p 3001",
+    "start:all": "sh scripts/start-all.sh",
+    "install:game": "npm --prefix ZDBGame install"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.3"
+  }
+}

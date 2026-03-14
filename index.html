@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sovereign | AI Trade Strategy Game</title>
+    <meta
+      name="description"
+      content="Sovereign is an AI-native global trade strategy game where you negotiate contracts with persistent AI nations, uncover hidden dependencies, and win through leverage."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0f14;
+        --bg-soft: #111d29;
+        --text: #e8f0f7;
+        --muted: #a5b8c9;
+        --accent: #f4b942;
+        --accent-2: #39c0b7;
+        --danger: #ff6a5a;
+        --card: rgba(18, 29, 40, 0.78);
+        --ring: rgba(244, 185, 66, 0.4);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(circle at 80% -10%, #243b55 0%, transparent 35%),
+          radial-gradient(circle at 0% 0%, #172838 0%, transparent 30%), var(--bg);
+        color: var(--text);
+        font-family: 'Space Grotesk', sans-serif;
+        line-height: 1.5;
+      }
+
+      .noise {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.07;
+        background-image: radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0);
+        background-size: 12px 12px;
+        z-index: 1;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      header {
+        padding: 1.25rem 0;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+
+      .pill {
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 0.35rem 0.8rem;
+        font-size: 0.85rem;
+      }
+
+      .hero {
+        padding: 4rem 0 3.2rem;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-family: 'Bebas Neue', sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        line-height: 0.95;
+        font-size: clamp(3rem, 10vw, 7rem);
+      }
+
+      .hero h1 span {
+        color: var(--accent);
+      }
+
+      .hero p {
+        color: var(--muted);
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        max-width: 55ch;
+        margin: 1rem 0 0;
+      }
+
+      .cta-row {
+        margin-top: 1.7rem;
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        text-decoration: none;
+        border-radius: 10px;
+        padding: 0.85rem 1.1rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(120deg, var(--accent), #ffd878);
+        color: #1f1a10;
+        box-shadow: 0 10px 26px -14px var(--accent);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.28);
+        color: var(--text);
+      }
+
+      .signal {
+        background: linear-gradient(145deg, rgba(57, 192, 183, 0.2), rgba(244, 185, 66, 0.15));
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 18px;
+        padding: 1.1rem;
+      }
+
+      .signal h3 {
+        margin: 0 0 0.45rem;
+        font-size: 1.1rem;
+      }
+
+      .signal ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+
+      section {
+        padding: 2rem 0;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.8rem;
+      }
+
+      .card {
+        background: var(--card);
+        backdrop-filter: blur(7px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 1rem;
+      }
+
+      .card .kpi {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent-2);
+      }
+
+      .card p {
+        margin: 0.3rem 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      h2 {
+        margin: 0 0 0.8rem;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+      }
+
+      .list {
+        margin: 0;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .timeline .card {
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+
+      .day {
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .final-cta {
+        margin-top: 1rem;
+        text-align: center;
+        padding: 2rem;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(244, 185, 66, 0.17), rgba(57, 192, 183, 0.17));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .final-cta p {
+        color: var(--muted);
+        margin: 0.4rem 0 1rem;
+      }
+
+      .alpha-form {
+        width: min(640px, 100%);
+        margin: 0.8rem auto 0;
+        display: grid;
+        gap: 0.8rem;
+        text-align: left;
+      }
+
+      .alpha-form-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+      }
+
+      .field {
+        display: grid;
+        gap: 0.35rem;
+      }
+
+      .field label {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
+      .field input {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.18);
+        color: var(--text);
+        padding: 0.8rem 0.9rem;
+        font: inherit;
+        outline: none;
+      }
+
+      .field input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--ring);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: center;
+      }
+
+      .status {
+        min-height: 1.2rem;
+        text-align: center;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+
+      .status.success {
+        color: var(--accent-2);
+      }
+
+      .status.error {
+        color: var(--danger);
+      }
+
+      footer {
+        padding: 2.2rem 0;
+        color: #87a1b7;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .kpis,
+        .grid-2,
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding-top: 2.5rem;
+        }
+
+        .alpha-form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="container reveal">
+      <nav>
+        <div class="brand">SOVEREIGN</div>
+        <div class="pill">AI-native Trade Strategy</div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero reveal">
+        <div>
+          <h1>Control <span>Global Leverage</span></h1>
+          <p>
+            Sovereign is an AI-native trade strategy game where each round starts with high-stakes incidents, domestic
+            decisions, and live negotiation with persistent AI nations. Build trust, protect supply corridors, and keep
+            your economy stable under pressure.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#waitlist">Join Sovereign Alpha</a>
+            <a class="btn btn-secondary" href="/play" target="_blank" rel="noreferrer">
+              Launch Prototype
+            </a>
+          </div>
+        </div>
+
+        <aside class="signal card">
+          <h3>Current Build Highlights</h3>
+          <ul>
+            <li>8 incident event types with branching outcomes</li>
+            <li>Interactive corridor map with lane health + activity</li>
+            <li>Progression unlocks: modifiers, advisors, starting perks</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="kpis reveal" aria-label="game highlights">
+        <article class="card">
+          <div class="kpi">8</div>
+          <p>Operational incident types per run (cyber, border, labor, sanctions, banking, and more)</p>
+        </article>
+        <article class="card">
+          <div class="kpi">5</div>
+          <p>AI nations with persistent memory, trust, pressure, and hidden agendas</p>
+        </article>
+        <article class="card">
+          <div class="kpi">3</div>
+          <p>Round phases: Incident Response → Domestic Decision → Trade Negotiation</p>
+        </article>
+      </section>
+
+      <section id="how" class="grid-2 reveal">
+        <article class="card">
+          <h2>Why It Is AI-Native</h2>
+          <ul class="list">
+            <li>AI nation responses adapt to trust, shortages, and your recent policy moves</li>
+            <li>Hidden agendas + persistent memory shape every counter-offer</li>
+            <li>AI strategic brief updates each round with context from your run</li>
+            <li>Deterministic fallback keeps demos reliable under pressure</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Who This Is For</h2>
+          <ul class="list">
+            <li>Strategy players who like systems, incentives, and negotiation</li>
+            <li>Builders who want AI to affect gameplay, not just dialogue</li>
+            <li>Teams demoing AI-native mechanics in a judge-ready vertical slice</li>
+            <li>Anyone who enjoys replayable runs with meaningful decisions</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="timeline reveal">
+        <article class="card">
+          <div class="day">How Runs Play</div>
+          <h2>One Turn, End to End</h2>
+          <ul class="list">
+            <li>Resolve a high-severity incident that can hit lanes and reserves</li>
+            <li>Choose domestic policy with treasury, debt, sentiment, and resource tradeoffs</li>
+            <li>Negotiate deals and monitor corridor health on the map</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="day">What You Grow</div>
+          <h2>Meta Progression</h2>
+          <ul class="list">
+            <li>Unlock scenario modifiers to shape volatility and starting conditions</li>
+            <li>Unlock advisors with distinct strategic biases</li>
+            <li>Unlock perks that change early-round resource posture</li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="waitlist" class="final-cta reveal">
+        <h2>Join Sovereign Alpha</h2>
+        <p>Get early access to new scenarios, private test sessions, and progression updates.</p>
+        <form id="alpha-form" class="alpha-form" novalidate>
+          <div class="alpha-form-row">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit" id="submit-btn">Submit</button>
+          </div>
+          <p id="form-status" class="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="container reveal">
+      Sovereign · AI-native global trade strategy where trust is currency
+    </footer>
+
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+      const alphaForm = document.getElementById('alpha-form');
+      const statusEl = document.getElementById('form-status');
+      const submitBtn = document.getElementById('submit-btn');
+
+      alphaForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        statusEl.className = 'status';
+        statusEl.textContent = '';
+
+        const formData = new FormData(alphaForm);
+        const name = String(formData.get('name') || '').trim();
+        const email = String(formData.get('email') || '').trim();
+
+        if (!name || !email) {
+          statusEl.className = 'status error';
+          statusEl.textContent = 'Please enter both your name and email.';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.6';
+        submitBtn.textContent = 'Submitting...';
+
+        try {
+          const response = await fetch('/api/alpha-signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email })
+          });
+
+          if (!response.ok) {
+            throw new Error('Signup request failed');
+          }
+
+          alphaForm.reset();
+          statusEl.className = 'status success';
+          statusEl.textContent = 'Success. Confirmation email sent.';
+        } catch (error) {
+          statusEl.className = 'status error';
+          statusEl.textContent = 'Unable to submit right now. Please try again.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.textContent = 'Submit';
+        }
+      });
+    </script>
+  </body>
+</html>
