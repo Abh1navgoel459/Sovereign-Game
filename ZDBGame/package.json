@@ -1,0 +1,51 @@
+{
+  "name": "zdbgame",
+  "version": "1.0.0",
+  "description": "AI-Native Game World Demo (ZeroDB Workshop)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest --coverage --verbose",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@ainative/ai-kit-a2ui-core": "github:AINative-Studio/ai-kit-a2ui-core",
+    "@ainative/ai-kit-core": "^0.2.0",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.1.6",
+    "jest": "^29.7.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PAIPalooza/ZDBGame.git"
+  },
+  "keywords": [
+    "ai-native",
+    "game",
+    "zerodb",
+    "workshop"
+  ],
+  "author": "AINative Studio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PAIPalooza/ZDBGame/issues"
+  },
+  "homepage": "https://github.com/PAIPalooza/ZDBGame#readme"
+}

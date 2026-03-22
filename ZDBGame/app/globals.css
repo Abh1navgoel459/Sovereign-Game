@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes ticker-move {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes route-flow {
+  0% {
+    stroke-dashoffset: 8;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes transmission-load {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.ticker-wrap {
+  overflow: hidden;
+}
+
+.ticker-track {
+  min-width: 200%;
+  animation: ticker-move 28s linear infinite;
+}
+
+.route-flow {
+  animation: route-flow 0.6s linear infinite;
+}
+
+.transmission-bar {
+  animation: transmission-load 1s ease-in-out infinite;
+}
+
+.interstitial-bar {
+  animation: transmission-load 1.2s ease-in-out infinite;
+}
+
+@keyframes deal-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.45);
+    background: rgba(8, 47, 73, 0.22);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(34, 211, 238, 0);
+    background: rgba(15, 23, 42, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0);
+    background: transparent;
+  }
+}
+
+.deal-flash {
+  animation: deal-flash 0.9s ease-out;
+}
