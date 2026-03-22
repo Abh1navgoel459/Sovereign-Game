@@ -1,17 +1,17 @@
 # Sovereign
 
-Sovereign is an AI-native global trade strategy game with:
-- a landing/alpha signup site
+Sovereign is a global trade strategy game with:
+- a landing page and alpha signup flow
 - a playable game app built on ZDBGame patterns (state, memory, events, telemetry)
 
-Players handle high-stakes turn events, make domestic policy decisions, and negotiate with persistent AI nations while managing trust, resources, and trade corridors.
+Each round, players handle a major event, make a domestic decision, and negotiate trade deals while managing trust, resources, and corridor health.
 
 ## Repo Structure
 
-- `index.html` - Marketing / hackathon landing page
-- `server.js` - Landing server + alpha signup email endpoint + `/play` redirect
-- `ZDBGame/` - Main game app (Next.js + API routes + game logic)
-- `scripts/start-all.sh` - Runs landing + game together
+- `index.html` - landing page
+- `server.js` - landing server, signup email endpoint, and `/play` redirect
+- `ZDBGame/` - main game app (Next.js + API routes + game logic)
+- `scripts/start-all.sh` - starts landing + game together
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ Run both apps:
 npm run start:all
 ```
 
-Or separately:
+Or run separately:
 
 ```bash
 npm run start:landing   # http://localhost:3000
@@ -44,13 +44,13 @@ npm run start:game      # http://localhost:3001
 
 - Landing: `http://localhost:3000`
 - Game: `http://localhost:3001`
-- Launch route from landing: `http://localhost:3000/play`
+- Launch route: `http://localhost:3000/play`
 
-`/play` does a health check and redirects to the game. If game is down, it shows a branded fallback page.
+`/play` checks game health and redirects if available. If not, it shows a fallback screen.
 
 ## Environment
 
-Root `.env` (landing/email):
+Root `.env` (landing + email):
 
 ```env
 PORT=3000
@@ -64,7 +64,7 @@ SMTP_PASS=your_gmail_app_password
 FROM_EMAIL=abhinavgoel459@gmail.com
 ```
 
-Game env (`ZDBGame/.env.local`) optional AI:
+Game env (`ZDBGame/.env.local`) for optional model-driven behavior:
 
 ```env
 AIKIT_ENABLED=true
@@ -74,28 +74,27 @@ AIKIT_API_KEY=your_key_here
 AIKIT_BASE_URL=
 ```
 
-If AI is disabled/unavailable, deterministic fallbacks are used.
+If model calls are disabled or unavailable, deterministic fallbacks are used.
 
 ## Core Gameplay Loop
 
-Each round:
-1. Resolve turn event (branching high-stakes incident)
-2. Resolve domestic scenario (treasury/debt/sentiment/resource tradeoffs)
-3. Propose and evaluate trade deal with an AI nation
-4. Advance round and process market + corridor updates
+1. Resolve turn event
+2. Resolve domestic scenario
+3. Submit and evaluate one trade proposal
+4. Advance round and apply market/corridor updates
 
-## Current Feature Set
+## Current Features
 
-- 8 turn event types with severity and branching outcomes
-- Dynamic domestic scenarios and consequences
-- Resource impacts (not just sentiment/approval style stats)
-- 5 AI nations with trust, pressure, memory, and hidden agendas
-- Interactive map with clickable trade corridors (health/activity/history)
-- Progression unlocks (scenario modifiers, advisors, perks)
-- Guided first-run UX
-- Judge mode + recap/metrics export
+- 8 turn event types with branching outcomes
+- Dynamic domestic scenarios with direct consequences
+- Resource impacts (not only sentiment-style stats)
+- 5 nations with trust, pressure, memory, and hidden agendas
+- Interactive map with clickable trade corridors
+- Progression unlocks (modifiers, advisors, perks)
+- Guided onboarding
+- Demo mode + recap/metrics export
 
-## Important API Routes
+## Key API Routes
 
 Landing:
 - `POST /api/alpha-signup`
@@ -121,5 +120,4 @@ npm --prefix ZDBGame run build
 
 - Secrets are ignored via root `.gitignore`.
 - Do not commit real `.env` values.
-- Root app and game app are intentionally split for hackathon speed.
-
+- Landing and game are intentionally split for speed.
